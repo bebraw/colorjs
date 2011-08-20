@@ -33,11 +33,8 @@ var tests = function(setName, newTests) {
             var refresh = 'refresh' in opts? opts.refresh: 0;
 
             if(refresh) {
-                var reload = function() {
-                    location.reload(true);
-                };
-
-                setTimeout(reload, refresh);
+                tests._refresh = refresh;
+                tests.play();
             }
 
             for(var i = 0; i < scope.testsToRun.length; i++) {
@@ -73,6 +70,44 @@ var tests = function(setName, newTests) {
     };
 };
 
+// playback
+tests.stop = function() {
+    clearTimeout(tests._timerId);
+};
+
+tests.play = function() {
+    var refresh = '_refresh' in tests? tests._refresh: 1000;
+    var reload = function() {
+        location.reload(true);
+    };
+
+    tests._timerId = setTimeout(reload, refresh);
+};
+
+tests.playbackUI = function() {
+    var elem = document.createElement('div');
+    var stopped = false;
+
+    elem.id = 'playback';
+    elem.innerHTML = 'Stop tests';
+
+    elem.onclick = function() {
+        if(stopped) {
+            tests.play();
+            elem.innerHTML = 'Stop tests';
+            stopped = false;
+        }
+        else {
+            tests.stop();
+            elem.innerHTML = 'Play tests';
+            stopped = true;
+        }
+    };
+
+    return elem;
+}
+
+// output
 tests.consoleOutput = function(report) {
     console.log(report.text);
 };
