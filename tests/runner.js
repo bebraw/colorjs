@@ -72,3 +72,13 @@ var tests = function(setName, newTests) {
         }
     };
 };
+
+tests.consoleOutput = function(report) {
+    console.log(report.text);
+};
+
+tests.HTMLOutput = function(target) {
+    return function(report) {
+        target.innerHTML += '<div class="' + report.state + '">' + report.text + '</div>';
+    }
+}

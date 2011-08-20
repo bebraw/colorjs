@@ -20,17 +20,8 @@
         window.onload = function() {
             var outputArea = document.getElementById('testOutput');
 
-            var HTMLOutput = function(report) {
-                outputArea.innerHTML += '<div class="' + report.state +
-                    '">' + report.text + '</div>';
-            };
-
-            var consoleOutput = function(report) {
-                console.log(report.text);
-            };
-
             tests().run({
-                output: HTMLOutput,
+                output: tests.HTMLOutput(outputArea),
                 refresh: 2000
             });
         }
