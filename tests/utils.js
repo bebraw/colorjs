@@ -27,3 +27,25 @@ var each = function(o, cb) {
         }
     }
 };
+
+var map = function(cb, seq) {
+    var ret = [];
+    
+    for(var i = 0, len = seq.length; i < len; i++) {
+        ret.push(cb(seq[i], i));
+    }
+    
+    return ret;
+}
+
+var toObject = function(zip) {
+    // converts zip to an object
+    var ret = {};
+
+    each(zip, function(k) {
+        // XXX: this could fail!
+        ret[k[0]] = k[1];
+    });
+
+    return ret;
+}

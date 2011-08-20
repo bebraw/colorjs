@@ -13,16 +13,16 @@ var color = function() {
             return 0;
         },
         hsva: function(v) {
-        
+            return;
         },
         h: function(v) {
-            
+            return 0.5;
         },
         s: function(v) {
-            
+            return 0.5;
         },
         v: function(v) {
-            
+            return 0.5;
         },
         a: function(v) {
             return 1;
