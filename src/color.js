@@ -154,6 +154,9 @@ var rgba = function() {
         toArray: function() {
             return [0, 0, 0, 1];
         },
+        toCSS: function() {
+            return 0;
+        },
         r: function(v) {
             return 1;
         },
@@ -163,21 +166,31 @@ var rgba = function() {
         b: function(v) {
             return 0;
         },
-        hsva: function(v) {
-            return;
+        a: function(v) {
+            return 1;
+        }
+    };
+};
+
+var hsva = function() {
+    return {
+        toArray: function() {
+            return [0, 0, 0, 1];
+        },
+        toCSS: function() {
+            return 0;
         },
         h: function(v) {
-            return 0.5;
+            return 0;
         },
         s: function(v) {
-            return 0.5;
+            return 1;
         },
         v: function(v) {
-            return 0.5;
+            return 1;
         },
         a: function(v) {
             return 1;
         }
-        // TODO: extras
     };
 };

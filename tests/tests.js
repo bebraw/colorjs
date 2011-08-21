@@ -16,46 +16,55 @@
 
     tests('Name to hex', nameToHexTests());
 
-    var isRed = function(c) {
-        each(function(k, v) {
-            assert(c[k]()).equals(v);
-        }, {r: 1, g: 0, b: 0, a: 1});
-    };
-
-    var testRed = function(param) {
-        return function() {
-            context(rgba(param), isRed);
-        }
-    };
-
-    // API: rgba, hsva
-    // to<target>, <color channel getter/setter>, toCSS, toArray
-
-    var initializerVariants = function() {
+    var initializers = function(opts) {
         var pairs = {
             colorName: 'red',
             hexWithHash: '#FF0000',
             hexWithoutHash: 'FF0000',
-            namedParameter: {r: 1}
+            namedParameter: opts.namedParameter
         };
-
-        return map(function(k, v) {
+        var testRed = function(param) {
+            return function() {
+                context(opts.ob(param), opts.isRed);
+            }
+        };
+        var ret = map(function(k, v) {
             return testRed(v);
         }, pairs);
-    };
 
-    tests('RGBA initializers', extend({
-        noParameters: function() {
-            var c = rgba();
+        ret.noParameters = function() {
+            var c = opts.ob();
             var result = c.toArray();
 
             each(function(k, i) {
                 assert(result[i]).equals(k);
             }, [0, 0, 0, 1]);
-        }}, initializerVariants())
-    );
+        };
 
-    // TODO: test HSVA initializers too
+        return ret;
+    };
+
+    tests('RGBA initializers', initializers({
+        ob: rgba,
+        namedParameter: {r: 1},
+        isRed: function(c) {
+            each(function(k, v) {
+                assert(c[k]()).equals(v);
+            }, {r: 1, g: 0, b: 0, a: 1});
+        }
+    }));
+    tests('HSVA initializers', initializers({
+        ob: hsva,
+        namedParameter: {s: 1, v: 1},
+        isRed: function(c) {
+            each(function(k, v) {
+                assert(c[k]()).equals(v);
+            }, {h: 0, s: 1, v: 1, a: 1});
+        }
+    }));
+
+    // API: rgba, hsva
+    // <color channel getter/setter>, toCSS, toArray, type conversions (hsva(col))
 
     var getters = function() {
         var getter = function(k, v) {
@@ -74,7 +83,7 @@
     };
 
     // TODO: separate (RGBA, HSVA)
-    tests('Getters', getters());
+    //tests('Getters', getters());
 
     tests('RGBA setters', {
         setR: function() {},
