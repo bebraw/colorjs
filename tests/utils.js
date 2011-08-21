@@ -10,7 +10,7 @@ var isObject = function(o) {
     return Object.prototype.toString.call(o) === '[object Object]';
 };
 
-var each = function(o, cb) {
+var each = function(cb, o) {
     if(isArray(o)) {
         for(var i = 0, l = o.length; i < l; i++) {
             cb(o[i], i);
@@ -50,16 +50,31 @@ var map = function(cb, seq) {
     }
 
     return ret;
-}
+};
+
+// XXX: make work with args generally
+// XXX: make work with arrays too? 
+var extend = function(a, b) {
+    var ret = {};
+
+    var assign = function(k, v) {
+        ret[k] = v;
+    };
+
+    each(assign, a);
+    each(assign, b);
+
+    return ret;
+};
 
 var toObject = function(zip) {
     // converts zip to an object
     var ret = {};
 
-    each(zip, function(k) {
+    each(function(k) {
         // XXX: this could fail!
         ret[k[0]] = k[1];
-    });
+    }, zip);
 
     return ret;
-}
+};

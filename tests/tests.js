@@ -11,48 +11,56 @@
             return function() {
                 assert(nameToHex(k)).equals(v);
             };
-        },
-            pairs
-        );
+        }, pairs);
     };
 
     tests('Name to hex', nameToHexTests());
 
     var isRed = function(c) {
-        each({r: 1, g: 0, b: 0, a: 1}, function(k, v) {
+        each(function(k, v) {
             assert(c[k]()).equals(v);
-        });
+        }, {r: 1, g: 0, b: 0, a: 1});
     };
 
     var testRed = function(param) {
         return function() {
-            context(color(param), isRed);
+            context(rgba(param), isRed);
         }
     };
 
-    // TODO: eliminate testRed repetition (templatize!)
-    // needs extend too
-    tests('Initializers', {
-        noParameters: function() {
-            var c = color();
-            var rgba = c.rgba();
+    // API: rgba, hsva
+    // to<target>, <color channel getter/setter>, toCSS, toArray
 
-            each([0, 0, 0, 1], function(k, i) {
-                assert(rgba[i]).equals(k);
-            });
-        },
-        colorName: testRed('red'),
-        hexWithHash: testRed('#FF0000'),
-        hexWithoutHash: testRed('FF0000'),
-        miniHexWithHash: testRed('#F00'),
-        miniHexWithoutHash: testRed('F00'),
-        namedParameter: testRed({r: 1})
-    });
+    var initializerVariants = function() {
+        var pairs = {
+            colorName: 'red',
+            hexWithHash: '#FF0000',
+            hexWithoutHash: 'FF0000',
+            namedParameter: {r: 1}
+        };
+
+        return map(function(k, v) {
+            return testRed(v);
+        }, pairs);
+    };
+
+    tests('RGBA initializers', extend({
+        noParameters: function() {
+            var c = rgba();
+            var result = c.toArray();
+
+            each(function(k, i) {
+                assert(result[i]).equals(k);
+            }, [0, 0, 0, 1]);
+        }}, initializerVariants())
+    );
+
+    // TODO: test HSVA initializers too
 
     var getters = function() {
         var getter = function(k, v) {
             return function() {
-                var c = color({k: v});
+                var c = rgba({k: v});
 
                 assert(c[k]()).equals(v);
             };
@@ -65,17 +73,17 @@
         ));
     };
 
-    // TODO: add rgba, hsva getter tests too (implement Object extend)
+    // TODO: separate (RGBA, HSVA)
     tests('Getters', getters());
 
-    tests('RGB setters', {
+    tests('RGBA setters', {
         setR: function() {},
         setG: function() {},
         setB: function() {}
         // TODO
     });
 
-    tests('HSV setters', {
+    tests('HSVA setters', {
         setH: function() {},
         setS: function() {},
         setV: function() {}

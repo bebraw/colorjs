@@ -149,9 +149,9 @@ var nameToHex = function(name) {
     return name in colors? colors[name]: undefined;
 };
 
-var color = function() {
+var rgba = function() {
     return {
-        rgba: function(v) {
+        toArray: function() {
             return [0, 0, 0, 1];
         },
         r: function(v) {
