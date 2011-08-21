@@ -160,12 +160,7 @@ var HEX_RGB = function(hex) {
     };
 }
 
-var rgba = function(initial) {
-    var r = 0;
-    var g = 0;
-    var b = 0;
-    var a = 1;
-
+var parseInitial = function(initial, channels, converter) {
     if(isString(initial)) {
         var hex = nameToHex(initial);
         
@@ -173,37 +168,44 @@ var rgba = function(initial) {
             hex = initial;
         }
 
-        var rgb = HEX_RGB(hex);
-        r = rgb.r;
-        g = rgb.g;
-        b = rgb.b;
+        return converter(hex);
     }
 
     if(isObject(initial)) {
-        r = 'r' in initial? initial.r: r;
-        g = 'g' in initial? initial.g: g;
-        b = 'b' in initial? initial.b: b;
-        a = 'a' in initial? initial.a: a;
+        return filter(function(k) {
+            return k in channels;
+        }, initial);
     }
+};
+
+var rgba = function(initial) {
+    var channels = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1
+    }
+
+    channels = extend(channels, parseInitial(initial, channels, HEX_RGB));
 
     return {
         toArray: function() {
-            return [r, 0, 0, 1];
+            return values(channels);
         },
         toCSS: function() {
             return 0;
         },
         r: function(o) {
-            return r;
+            return channels.r;
         },
         g: function(o) {
-            return g;
+            return channels.g;
         },
         b: function(o) {
-            return b;
+            return channels.b;
         },
         a: function(o) {
-            return a;
+            return channels.a;
         }
     };
 };
@@ -236,50 +238,33 @@ var HEX_HSV = function(hex) {
 };
 
 var hsva = function(initial) {
-    var h = 0;
-    var s = 0;
-    var v = 0;
-    var a = 1;
-
-    if(isString(initial)) {
-        var hex = nameToHex(initial);
-        
-        if(!hex) {
-            hex = initial;
-        }
-
-        var hsv = HEX_HSV(hex);
-        
-        h = hsv.h;
-        s = hsv.s;
-        v = hsv.v;
+    var channels = {
+        h: 0,
+        s: 0,
+        v: 0,
+        a: 1
     }
 
-    if(isObject(initial)) {
-        h = 'h' in initial? initial.h: h;
-        s = 's' in initial? initial.s: s;
-        v = 'v' in initial? initial.v: v;
-        a = 'a' in initial? initial.a: a;
-    }
+    channels = extend(channels, parseInitial(initial, channels, HEX_HSV));
 
     return {
         toArray: function() {
-            return [0, 0, 0, 1];
+            return values(channels);
         },
         toCSS: function() {
             return 0;
         },
         h: function(o) {
-            return h;
+            return channels.h;
         },
         s: function(o) {
-            return s;
+            return channels.s;
         },
         v: function(o) {
-            return v;
+            return channels.v;
         },
         a: function(o) {
-            return a;
+            return channels.a;
         }
     };
 };

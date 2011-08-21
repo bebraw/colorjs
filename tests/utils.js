@@ -65,10 +65,35 @@ var map = function(cb, seq) {
     if(isObject(seq)) {
         ret = {};
 
+        var j = 0; // XXX: enumerate
         for(var k in seq) {
             var v = seq[k];
 
-            ret[k] = cb(k, v, i);
+            ret[k] = cb(k, v, j);
+            j++;
+        }
+    }
+
+    return ret;
+};
+
+var filter = function(cb, seq) {
+    var ret;
+
+    // TODO: array
+
+    if(isObject(seq)) {
+        ret = {};
+
+        var j = 0; // XXX: enumerate
+        for(var k in seq) {
+            var v = seq[k];
+
+            if(cb(k, v, j)) {
+                ret[k] = v;
+            }
+
+            j++;
         }
     }
 
@@ -111,4 +136,14 @@ var zip = function(a, b) {
     }
 
     return ret;
-}
+};
+
+var values = function(o) {
+    var ret = [];
+
+    each(function(k, v) {
+        ret.push(v);
+    }, o);
+
+    return ret;
+};
