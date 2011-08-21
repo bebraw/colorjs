@@ -1,4 +1,23 @@
 (function() {
+    var nameToHexTests = function() {
+        var pairs = {
+            blue: '0000ff',
+            green: '008000',
+            red: 'ff0000',
+            yellow: 'ffff00'
+        };
+
+        return map(function(k, v) {
+            return function() {
+                assert(nameToHex(k)).equals(v);
+            };
+        },
+            pairs
+        );
+    };
+
+    tests('Name to hex', nameToHexTests());
+
     var isRed = function(c) {
         each({r: 1, g: 0, b: 0, a: 1}, function(k, v) {
             assert(c[k]()).equals(v);
@@ -11,6 +30,8 @@
         }
     };
 
+    // TODO: eliminate testRed repetition (templatize!)
+    // needs extend too
     tests('Initializers', {
         noParameters: function() {
             var c = color();
@@ -25,10 +46,7 @@
         hexWithoutHash: testRed('FF0000'),
         miniHexWithHash: testRed('#F00'),
         miniHexWithoutHash: testRed('F00'),
-        namedParameter: testRed({r: 1}),
-        _testRed: function() {
-            return true;
-        }
+        namedParameter: testRed({r: 1})
     });
 
     var getters = function() {
@@ -47,6 +65,7 @@
         ));
     };
 
+    // TODO: add rgba, hsva getter tests too (implement Object extend)
     tests('Getters', getters());
 
     tests('RGB setters', {

@@ -29,12 +29,26 @@ var each = function(o, cb) {
 };
 
 var map = function(cb, seq) {
-    var ret = [];
-    
-    for(var i = 0, len = seq.length; i < len; i++) {
-        ret.push(cb(seq[i], i));
+    var ret;
+
+    if(isArray(seq)) {
+        ret = [];
+
+        for(var i = 0, len = seq.length; i < len; i++) {
+            ret.push(cb(seq[i], i));
+        }
     }
-    
+
+    if(isObject(seq)) {
+        ret = {};
+
+        for(var k in seq) {
+            var v = seq[k];
+
+            ret[k] = cb(k, v, i);
+        }
+    }
+
     return ret;
 }
 
