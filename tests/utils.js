@@ -10,8 +10,31 @@ var isObject = function(o) {
     return Object.prototype.toString.call(o) === '[object Object]';
 };
 
+var isString = function(o) {
+    return typeof(o) === 'string';
+};
+
+var lstrip = function(s, c) {
+    var ret = '';
+    var seeking = true;
+
+    each(function(chr) {
+        if(seeking) {
+            if(chr != c) {
+                seeking = false;
+                ret += chr;
+            }
+        }
+        else {
+            ret += chr;
+        }
+    }, s);
+
+    return ret;
+}
+
 var each = function(cb, o) {
-    if(isArray(o)) {
+    if(isArray(o) || isString(o)) {
         for(var i = 0, l = o.length; i < l; i++) {
             cb(o[i], i);
         }
@@ -78,3 +101,14 @@ var toObject = function(zip) {
 
     return ret;
 };
+
+var zip = function(a, b) {
+    // XXX: might want to spec this better (min etc.)
+    var ret = [];
+
+    for(var i = 0; i < a.length; i++) {
+        ret.push([a[i], b[i]]);
+    }
+
+    return ret;
+}

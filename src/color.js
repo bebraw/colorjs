@@ -149,30 +149,119 @@ var nameToHex = function(name) {
     return name in colors? colors[name]: undefined;
 };
 
-var rgba = function() {
+var HEX_RGB = function(hex) {
+    hex = lstrip(hex, '#');
+
+    // based on http://www.phpied.com/rgb-color-parser-in-javascript/
+    return {
+        r: parseInt(hex.substring(0, 2), 16) / 255,
+        g: parseInt(hex.substring(2, 4), 16) / 255,
+        b: parseInt(hex.substring(4, 6), 16) / 255
+    };
+}
+
+var rgba = function(initial) {
+    var r = 0;
+    var g = 0;
+    var b = 0;
+    var a = 1;
+
+    if(isString(initial)) {
+        var hex = nameToHex(initial);
+        
+        if(!hex) {
+            hex = initial;
+        }
+
+        var rgb = HEX_RGB(hex);
+        r = rgb.r;
+        g = rgb.g;
+        b = rgb.b;
+    }
+
+    if(isObject(initial)) {
+        r = 'r' in initial? initial.r: r;
+        g = 'g' in initial? initial.g: g;
+        b = 'b' in initial? initial.b: b;
+        a = 'a' in initial? initial.a: a;
+    }
+
     return {
         toArray: function() {
-            return [0, 0, 0, 1];
+            return [r, 0, 0, 1];
         },
         toCSS: function() {
             return 0;
         },
-        r: function(v) {
-            return 1;
+        r: function(o) {
+            return r;
         },
-        g: function(v) {
-            return 0;
+        g: function(o) {
+            return g;
         },
-        b: function(v) {
-            return 0;
+        b: function(o) {
+            return b;
         },
-        a: function(v) {
-            return 1;
+        a: function(o) {
+            return a;
         }
     };
 };
 
-var hsva = function() {
+var RGB_HSV = function(rgb) {
+    // based on http://www.phpied.com/rgb-color-parser-in-javascript/
+    var r = rgb.r * 255;
+    var g = rgb.g * 255;
+    var b = rgb.b * 255;
+    var n = Math.min(Math.min(r, g), b);
+    var v = Math.max(Math.max(r, g), b);
+    var m = v - n;
+
+    if(m == 0) {
+        return [ null, 0, v ];
+    }
+
+    var h = r==n ? 3 + (b - g) / m : (g == n ? 5 + (r - b) / m : 1 + (g - r) / m);
+    h = (h == 6? 0: h) / 6;
+
+    return {
+        h: h,
+        s: m / v,
+        v: v / 255
+    };
+}
+
+var HEX_HSV = function(hex) {
+    return RGB_HSV(HEX_RGB(hex));
+};
+
+var hsva = function(initial) {
+    var h = 0;
+    var s = 0;
+    var v = 0;
+    var a = 1;
+
+    if(isString(initial)) {
+        var hex = nameToHex(initial);
+        
+        if(!hex) {
+            hex = initial;
+        }
+
+        var hsv = HEX_HSV(hex);
+        
+        h = hsv.h;
+        s = hsv.s;
+        v = hsv.v;
+    }
+
+    if(isObject(initial)) {
+        h = 'h' in initial? initial.h: h;
+        s = 's' in initial? initial.s: s;
+        v = 'v' in initial? initial.v: v;
+        a = 'a' in initial? initial.a: a;
+    }
+
     return {
         toArray: function() {
             return [0, 0, 0, 1];
@@ -180,17 +269,17 @@ var hsva = function() {
         toCSS: function() {
             return 0;
         },
-        h: function(v) {
-            return 0;
+        h: function(o) {
+            return h;
         },
-        s: function(v) {
-            return 1;
+        s: function(o) {
+            return s;
         },
-        v: function(v) {
-            return 1;
+        v: function(o) {
+            return v;
         },
-        a: function(v) {
-            return 1;
+        a: function(o) {
+            return a;
         }
     };
 };

@@ -66,37 +66,39 @@
     // API: rgba, hsva
     // <color channel getter/setter>, toCSS, toArray, type conversions (hsva(col))
 
-    var getters = function() {
-        var getter = function(k, v) {
+    var getters = function(ob, channels) {
+        var names = map(function(k) {
+            return 'get' + k.toUpperCase();
+        }, channels);
+        var methods = map(function(k) {
             return function() {
-                var c = rgba({k: v});
+                var params = {};
+                params[k] = 0.5;
 
-                assert(c[k]()).equals(v);
+                var c = ob(params);
+
+                assert(c[k]()).equals(0.5);
             };
-        }
-        
-        return toObject(map(function(k) {
-            return ['get' + k.toUpperCase(), getter(k, 0.5)]
-        },
-            ['r', 'g', 'b', 'h', 's', 'v', 'a']
-        ));
-    };
+        }, channels);
 
-    // TODO: separate (RGBA, HSVA)
-    //tests('Getters', getters());
+        return toObject(zip(names, methods));
+    }
+
+    tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
+    tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
 
     tests('RGBA setters', {
         setR: function() {},
         setG: function() {},
-        setB: function() {}
-        // TODO
+        setB: function() {},
+        setA: function() {}
     });
 
     tests('HSVA setters', {
         setH: function() {},
         setS: function() {},
-        setV: function() {}
-        // TODO
+        setV: function() {},
+        setA: function() {}
     });
 
     // TODO: tests invalid sets (neg, too high, wrong type)
