@@ -111,22 +111,34 @@
     tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
 
     tests('toArray', {
-        initialToArray: function() {
+        initial: function() {
             assertArray(hsva().toArray(), [0, 0, 0, 1]);
         },
-        blueToArray: function() {
+        blue: function() {
             assertArray(rgba('blue').toArray(), [0, 0, 1, 1]);
         }
     });
 
+    tests('toHex', {
+        initial: function() {
+            assertArray(hsva().toHex(), '000000');
+        },
+        redRGBA: function() {
+            assert(rgba('red').toHex()).equals('ff0000');
+        },
+        redHSVA: function() {
+            assert(hsva('red').toHex()).equals('ff0000');
+        }
+    });
+
     tests('toCSS', {
-        initialToCSS: function() {
+        initial: function() {
             assert(hsva().toCSS()).equals('rgb(0,0,0)');
         },
-        blueToCSS: function() {
+        blue: function() {
             assert(rgba('blue').toCSS()).equals('rgb(0,0,255)');
         },
-        blueWithAlphaToCSS: function() {
+        blueWithAlpha: function() {
             assert(hsva('blue').a(0.5).toCSS()).equals('rgba(0,0,255,0.5)')
         }
     });
@@ -149,5 +161,15 @@
         }
     });
 
-    // TODO: type conversions (hsva(rgba())
+    tests('type conversions', {
+        hsva_rgba: function() {
+            assertArray(rgba(hsva('red')).toArray(), [1, 0, 0, 1]);
+        },
+        rgba_hsva: function() {
+            assertArray(rgba(hsva(rgba('red'))).toArray(), [1, 0, 0, 1]);
+        },
+        alpha: function() {
+            assert(hsva(rgba({a: 0.5})).a()).equals(0.5);
+        }
+    });
 }());

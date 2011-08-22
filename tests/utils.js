@@ -161,3 +161,15 @@ var values = function(o) {
 var clamp = function(a, minValue, maxValue) {
     return Math.min(Math.max(a, minValue), maxValue);
 };
+
+var leftFill = function(number, width, chr)
+{
+    // http://stackoverflow.com/questions/1267283/how-can-i-create-a-zerofilled-value-using-javascript
+    width -= number.toString().length;
+
+    if(width > 0) {
+        return new Array(width + (/\./.test(number)? 2: 1)).join(chr) + number;
+    }
+
+    return number;
+}

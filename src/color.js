@@ -232,7 +232,11 @@ var RGB_HSV = function(rgb) {
     var m = v - n;
 
     if(m == 0) {
-        return [ null, 0, v ];
+        return {
+            h: null,
+            s: 0,
+            v: v 
+        };
     }
 
     var h = r==n ? 3 + (b - g) / m : (g == n ? 5 + (r - b) / m : 1 + (g - r) / m);
@@ -249,7 +253,19 @@ var HEX_HSV = function(hex) {
     return RGB_HSV(HEX_RGB(hex));
 };
 
-var colorTemplate = function(initialChannels, converter, RGBconverter) {
+var RGB_HEX = function(rgb) {
+    // http://blogs.x2line.com/al/articles/280.aspx
+    // r, g, b e [0, 1]
+    var decColor = rgb.b * 255 + 256 * rgb.g * 255 + 65536 * rgb.r * 255;
+
+    return leftFill(decColor.toString(16), 6, 0);
+};
+
+var HSV_HEX = function(hsv) {
+    return RGB_HEX(HSV_RGB(hsv));
+};
+
+var colorTemplate = function(initialChannels, converter, RGBconverter, hexConverter) {
     var parse = function(initial) {
         if(isString(initial)) {
             var hex = nameToHex(initial);
@@ -262,6 +278,14 @@ var colorTemplate = function(initialChannels, converter, RGBconverter) {
         }
 
         if(isObject(initial)) {
+            if('toHex' in initial) {
+                var ret = converter(initial.toHex());
+
+                ret.a = initial.a();
+
+                return ret;
+            }
+
             return filter(function(k) {
                 return k in initialChannels;
             }, initial);
@@ -303,6 +327,9 @@ var colorTemplate = function(initialChannels, converter, RGBconverter) {
                 }
 
                 return 'rgb(' + r + ',' + g + ',' + b + ')';
+            },
+            toHex: function() {
+                return hexConverter(channels);
             }
         };
 
@@ -316,5 +343,5 @@ var colorTemplate = function(initialChannels, converter, RGBconverter) {
 
 var pass = function(a) {return a;}
 
-var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB, pass);
-var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV, HSV_RGB);
+var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB, pass, RGB_HEX);
+var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV, HSV_RGB, HSV_HEX);
