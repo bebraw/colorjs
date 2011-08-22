@@ -1,4 +1,4 @@
-(function() {
+define(['runner', 'color', 'utils'], function(runner, color, utils) {
     var nameToHexTests = function() {
         var pairs = {
             blue: '0000ff',
@@ -7,14 +7,16 @@
             yellow: 'ffff00'
         };
 
-        return map(function(k, v) {
+        return utils.map(function(k, v) {
             return function() {
-                assert(nameToHex(k)).equals(v);
+                assert(color.nameToHex(k)).equals(v);
             };
         }, pairs);
     };
+    var rgba = color.rgba;
+    var hsva = color.hsva;
 
-    tests('Name to hex', nameToHexTests());
+    runner.tests('Name to hex', nameToHexTests());
 
     var initializers = function(opts) {
         var pairs = {
@@ -25,10 +27,10 @@
         };
         var testRed = function(param) {
             return function() {
-                context(opts.ob(param), opts.isRed);
+                utils.context(opts.ob(param), opts.isRed);
             }
         };
-        var ret = map(function(k, v) {
+        var ret = utils.map(function(k, v) {
             return testRed(v);
         }, pairs);
 
@@ -42,30 +44,30 @@
         return ret;
     };
 
-    tests('RGBA initializers', initializers({
+    runner.tests('RGBA initializers', initializers({
         ob: rgba,
         namedParameter: {r: 1},
         isRed: function(c) {
-            each(function(k, v) {
+            utils.each(function(k, v) {
                 assert(c[k]()).equals(v);
             }, {r: 1, g: 0, b: 0, a: 1});
         }
     }));
-    tests('HSVA initializers', initializers({
+    runner.tests('HSVA initializers', initializers({
         ob: hsva,
         namedParameter: {s: 1, v: 1},
         isRed: function(c) {
-            each(function(k, v) {
+            utils.each(function(k, v) {
                 assert(c[k]()).equals(v);
             }, {h: 0, s: 1, v: 1, a: 1});
         }
     }));
 
     var getters = function(ob, channels) {
-        var names = map(function(k) {
+        var names = utils.map(function(k) {
             return 'get' + k.toUpperCase();
         }, channels);
-        var methods = map(function(k) {
+        var methods = utils.map(function(k) {
             return function() {
                 var params = {};
                 params[k] = 0.5;
@@ -76,17 +78,17 @@
             };
         }, channels);
 
-        return toObject(zip(names, methods));
+        return utils.toObject(utils.zip(names, methods));
     };
 
-    tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
-    tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
+    runner.tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
+    runner.tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
 
     var setters = function(ob, channels) {
-        var names = map(function(k) {
+        var names = utils.map(function(k) {
             return 'set' + k.toUpperCase();
         }, channels);
-        var methods = map(function(k) {
+        var methods = utils.map(function(k) {
             return function() {
                 var c = ob();
 
@@ -96,13 +98,13 @@
             };
         }, channels);
 
-        return toObject(zip(names, methods));
+        return utils.toObject(utils.zip(names, methods));
     };
 
-    tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
-    tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
+    runner.tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
+    runner.tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
 
-    tests('toArray', {
+    runner.tests('toArray', {
         initial: function() {
             assert(hsva().toArray()).equals([0, 0, 0, 1]);
         },
@@ -111,7 +113,7 @@
         }
     });
 
-    tests('toHex', {
+    runner.tests('toHex', {
         initial: function() {
             assert(hsva().toHex()).equals('000000');
         },
@@ -123,7 +125,7 @@
         }
     });
 
-    tests('toCSS', {
+    runner.tests('toCSS', {
         initial: function() {
             assert(hsva().toCSS()).equals('rgb(0,0,0)');
         },
@@ -135,13 +137,13 @@
         }
     });
 
-    tests('chaining', {
+    runner.tests('chaining', {
         simpleChain: function() {
             assert(rgba().r(1).g(0.7).b(0.5).a(0.3).toArray()).equals([1, 0.7, 0.5, 0.3]);
         }
     });
 
-    tests('bounds', {
+    runner.tests('bounds', {
         lowerBound: function() {
             assert(rgba().r(-5).r()).equals(0);
         },
@@ -153,7 +155,7 @@
         }
     });
 
-    tests('type conversions', {
+    runner.tests('type conversions', {
         hsva_rgba: function() {
             assert(rgba(hsva('red')).toArray()).equals([1, 0, 0, 1]);
         },
@@ -164,4 +166,4 @@
             assert(hsva(rgba({a: 0.5})).a()).equals(0.5);
         }
     });
-}());
+});
