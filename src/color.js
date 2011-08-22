@@ -265,7 +265,7 @@ var HSV_HEX = function(hsv) {
     return RGB_HEX(HSV_RGB(hsv));
 };
 
-var colorTemplate = function(initialChannels, converter, RGBconverter, hexConverter) {
+var colorTemplate = function(initialChannels, converters) {
     var parse = function(initial) {
         if(isString(initial)) {
             var hex = nameToHex(initial);
@@ -274,12 +274,12 @@ var colorTemplate = function(initialChannels, converter, RGBconverter, hexConver
                 hex = initial;
             }
 
-            return converter(hex);
+            return converters.hexToColor(hex);
         }
 
         if(isObject(initial)) {
             if('toHex' in initial) {
-                var ret = converter(initial.toHex());
+                var ret = converters.hexToColor(initial.toHex());
 
                 ret.a = initial.a();
 
@@ -290,6 +290,8 @@ var colorTemplate = function(initialChannels, converter, RGBconverter, hexConver
                 return k in initialChannels;
             }, initial);
         }
+
+        return null;
     };
 
     return function(initial) {
@@ -316,7 +318,7 @@ var colorTemplate = function(initialChannels, converter, RGBconverter, hexConver
                 return values(channels);
             },
             toCSS: function() {
-                var rgb = RGBconverter(channels);
+                var rgb = converters.colorToRGB(channels);
                 var r = parseInt(rgb.r * 255);
                 var g = parseInt(rgb.g * 255);
                 var b = parseInt(rgb.b * 255);
@@ -329,7 +331,7 @@ var colorTemplate = function(initialChannels, converter, RGBconverter, hexConver
                 return 'rgb(' + r + ',' + g + ',' + b + ')';
             },
             toHex: function() {
-                return hexConverter(channels);
+                return converters.colorToHex(channels);
             }
         };
 
@@ -341,7 +343,13 @@ var colorTemplate = function(initialChannels, converter, RGBconverter, hexConver
     };
 };
 
-var pass = function(a) {return a;}
-
-var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB, pass, RGB_HEX);
-var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV, HSV_RGB, HSV_HEX);
+var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, {
+    hexToColor: HEX_RGB,
+    colorToRGB: function(a) {return a;},
+    colorToHex: RGB_HEX
+});
+var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, {
+    hexToColor: HEX_HSV,
+    colorToRGB: HSV_RGB,
+    colorToHex: HSV_HEX
+});
