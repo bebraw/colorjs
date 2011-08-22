@@ -157,3 +157,7 @@ var values = function(o) {
 
     return ret;
 };
+
+var clamp = function(a, minValue, maxValue) {
+    return Math.min(Math.max(a, minValue), maxValue);
+};

@@ -158,59 +158,69 @@ var HEX_RGB = function(hex) {
         g: parseInt(hex.substring(2, 4), 16) / 255,
         b: parseInt(hex.substring(4, 6), 16) / 255
     };
-}
-
-var colorTemplate = function(initialChannels, converter) {
-    var parseInitial = function(initial, channels, converter) {
-        if(isString(initial)) {
-            var hex = nameToHex(initial);
-
-            if(!hex) {
-                hex = initial;
-            }
-
-            return converter(hex);
-        }
-
-        if(isObject(initial)) {
-            return filter(function(k) {
-                return k in channels;
-            }, initial);
-        }
-    };
-
-    return function(initial) {
-        var channels = extend(initialChannels,
-            parseInitial(initial, initialChannels, converter));
-
-        var channel = function(name) {
-            return function(v) {
-                if(v) {
-                    channels[name] = v;
-                }
-
-                return channels[name];
-            };
-        };
-
-        var ret = {
-            toArray: function() {
-                return values(channels);
-            },
-            toCSS: function() {
-                return 0;
-            }
-        };
-
-        each(function(k) {
-            ret[k] = channel(k);
-        }, keys(channels));
-
-        return ret;
-    }
 };
 
-var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB);
+var HSV_RGB = function(hsv) {
+    // http://www.colorjack.com/opensource/dhtml+color+picker.html
+    // h, s, v e [0, 1]
+    var H = hsv.h,
+        S = hsv.s,
+        V = hsv.v,
+        R, G, B;
+    var A, B, C, D;
+
+    if (S == 0) {
+        R = G = B = Math.round(V * 255);
+    }
+    else {
+        if (H >= 1) H = 0;
+        H = 6 * H;
+        D = H - Math.floor(H);
+        A = Math.round(255 * V * (1 - S));
+        B = Math.round(255 * V * (1 - (S * D)));
+        C = Math.round(255 * V * (1 - (S * (1 - D))));
+        V = Math.round(255 * V);
+
+        switch (Math.floor(H)) {
+            case 0:
+                R = V;
+                G = C;
+                B = A;
+                break;
+            case 1:
+                R = B;
+                G = V;
+                B = A;
+                break;
+            case 2:
+                R = A;
+                G = V;
+                B = C;
+                break;
+            case 3:
+                R = A;
+                G = B;
+                B = V;
+                break;
+            case 4:
+                R = C;
+                G = A;
+                B = V;
+                break;
+            case 5:
+                R = V;
+                G = A;
+                B = B;
+                break;
+        }
+    }
+
+    return {
+        r: R / 255,
+        g: G / 255,
+        b: B / 255
+    };
+};
 
 var RGB_HSV = function(rgb) {
     // based on http://www.phpied.com/rgb-color-parser-in-javascript/
@@ -233,10 +243,78 @@ var RGB_HSV = function(rgb) {
         s: m / v,
         v: v / 255
     };
-}
+};
 
 var HEX_HSV = function(hex) {
     return RGB_HSV(HEX_RGB(hex));
 };
 
-var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV);
+var colorTemplate = function(initialChannels, converter, RGBconverter) {
+    var parse = function(initial) {
+        if(isString(initial)) {
+            var hex = nameToHex(initial);
+
+            if(!hex) {
+                hex = initial;
+            }
+
+            return converter(hex);
+        }
+
+        if(isObject(initial)) {
+            return filter(function(k) {
+                return k in initialChannels;
+            }, initial);
+        }
+    };
+
+    return function(initial) {
+        var channels = extend(initialChannels, parse(initial));
+
+        channels = map(function(k, v) {
+            return clamp(v, 0, 1);
+        }, channels);
+
+        var channel = function(name) {
+            return function(v) {
+                if(v) {
+                    channels[name] = clamp(v, 0, 1);
+
+                    return methods;
+                }
+
+                return channels[name];
+            };
+        };
+
+        var methods = {
+            toArray: function() {
+                return values(channels);
+            },
+            toCSS: function() {
+                var rgb = RGBconverter(channels);
+                var r = parseInt(rgb.r * 255);
+                var g = parseInt(rgb.g * 255);
+                var b = parseInt(rgb.b * 255);
+                var a = channels.a;
+
+                if(channels.a < 1) {
+                    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+                }
+
+                return 'rgb(' + r + ',' + g + ',' + b + ')';
+            }
+        };
+
+        each(function(k) {
+            methods[k] = channel(k);
+        }, keys(channels));
+
+        return methods;
+    };
+};
+
+var pass = function(a) {return a;}
+
+var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB, pass);
+var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV, HSV_RGB);

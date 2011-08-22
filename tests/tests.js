@@ -143,6 +143,9 @@
         },
         upperBound: function() {
             assert(rgba().r(10).r()).equals(1);
+        },
+        initialBounds: function() {
+            assertArray(rgba({r: -4, g: 10, b: -4, a: 10}).toArray(), [0, 1, 0, 1]);
         }
     });
 
