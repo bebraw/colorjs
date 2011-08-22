@@ -138,6 +138,16 @@ var zip = function(a, b) {
     return ret;
 };
 
+var keys = function(o) {
+    var ret = [];
+
+    each(function(k) {
+        ret.push(k);
+    }, o);
+
+    return ret;    
+};
+
 var values = function(o) {
     var ret = [];
 

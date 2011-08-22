@@ -82,24 +82,30 @@
         }, channels);
 
         return toObject(zip(names, methods));
-    }
+    };
 
     tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
     tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
 
-    tests('RGBA setters', {
-        setR: function() {},
-        setG: function() {},
-        setB: function() {},
-        setA: function() {}
-    });
+    var setters = function(ob, channels) {
+        var names = map(function(k) {
+            return 'set' + k.toUpperCase();
+        }, channels);
+        var methods = map(function(k) {
+            return function() {
+                var c = ob();
 
-    tests('HSVA setters', {
-        setH: function() {},
-        setS: function() {},
-        setV: function() {},
-        setA: function() {}
-    });
+                c[k](0.5);
+
+                assert(c[k]()).equals(0.5);
+            };
+        }, channels);
+
+        return toObject(zip(names, methods));
+    };
+
+    tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
+    tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
 
     // TODO: tests invalid sets (neg, too high, wrong type)
     // TODO: test chaining

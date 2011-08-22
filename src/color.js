@@ -160,55 +160,57 @@ var HEX_RGB = function(hex) {
     };
 }
 
-var parseInitial = function(initial, channels, converter) {
-    if(isString(initial)) {
-        var hex = nameToHex(initial);
-        
-        if(!hex) {
-            hex = initial;
+var colorTemplate = function(initialChannels, converter) {
+    var parseInitial = function(initial, channels, converter) {
+        if(isString(initial)) {
+            var hex = nameToHex(initial);
+
+            if(!hex) {
+                hex = initial;
+            }
+
+            return converter(hex);
         }
 
-        return converter(hex);
-    }
-
-    if(isObject(initial)) {
-        return filter(function(k) {
-            return k in channels;
-        }, initial);
-    }
-};
-
-var rgba = function(initial) {
-    var channels = {
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 1
-    }
-
-    channels = extend(channels, parseInitial(initial, channels, HEX_RGB));
-
-    return {
-        toArray: function() {
-            return values(channels);
-        },
-        toCSS: function() {
-            return 0;
-        },
-        r: function(o) {
-            return channels.r;
-        },
-        g: function(o) {
-            return channels.g;
-        },
-        b: function(o) {
-            return channels.b;
-        },
-        a: function(o) {
-            return channels.a;
+        if(isObject(initial)) {
+            return filter(function(k) {
+                return k in channels;
+            }, initial);
         }
     };
+
+    return function(initial) {
+        var channels = extend(initialChannels,
+            parseInitial(initial, initialChannels, converter));
+
+        var channel = function(name) {
+            return function(v) {
+                if(v) {
+                    channels[name] = v;
+                }
+
+                return channels[name];
+            };
+        };
+
+        var ret = {
+            toArray: function() {
+                return values(channels);
+            },
+            toCSS: function() {
+                return 0;
+            }
+        };
+
+        each(function(k) {
+            ret[k] = channel(k);
+        }, keys(channels));
+
+        return ret;
+    }
 };
+
+var rgba = colorTemplate({r: 0, g: 0, b: 0, a: 1}, HEX_RGB);
 
 var RGB_HSV = function(rgb) {
     // based on http://www.phpied.com/rgb-color-parser-in-javascript/
@@ -237,34 +239,4 @@ var HEX_HSV = function(hex) {
     return RGB_HSV(HEX_RGB(hex));
 };
 
-var hsva = function(initial) {
-    var channels = {
-        h: 0,
-        s: 0,
-        v: 0,
-        a: 1
-    }
-
-    channels = extend(channels, parseInitial(initial, channels, HEX_HSV));
-
-    return {
-        toArray: function() {
-            return values(channels);
-        },
-        toCSS: function() {
-            return 0;
-        },
-        h: function(o) {
-            return channels.h;
-        },
-        s: function(o) {
-            return channels.s;
-        },
-        v: function(o) {
-            return channels.v;
-        },
-        a: function(o) {
-            return channels.a;
-        }
-    };
-};
+var hsva = colorTemplate({h: 0, s: 0, v: 0, a: 1}, HEX_HSV);
