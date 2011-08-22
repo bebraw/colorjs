@@ -16,6 +16,8 @@
 
     tests('Name to hex', nameToHexTests());
 
+    // XXX: eliminate this. assert().equals should be able to deal with this
+    // case
     var assertArray = function(given, expected) {
         each(function(k, i) {
             assert(given[i]).equals(k);
@@ -67,9 +69,6 @@
         }
     }));
 
-    // API: rgba, hsva
-    // <color channel getter/setter>, toCSS, toArray, type conversions (hsva(col))
-
     var getters = function(ob, channels) {
         var names = map(function(k) {
             return 'get' + k.toUpperCase();
@@ -113,19 +112,39 @@
 
     tests('toArray', {
         initialToArray: function() {
-            var c = hsva();
-            var result = c.toArray();
-
-            assertArray(result, [0, 0, 0, 1]);
+            assertArray(hsva().toArray(), [0, 0, 0, 1]);
         },
         blueToArray: function() {
-            var c = rgba('blue');
-            var result = c.toArray();
-
-            assertArray(result, [0, 0, 1, 1]);
+            assertArray(rgba('blue').toArray(), [0, 0, 1, 1]);
         }
     });
 
-    // TODO: tests invalid sets (neg, too high, wrong type)
-    // TODO: test chaining
+    tests('toCSS', {
+        initialToCSS: function() {
+            assert(hsva().toCSS()).equals('rgb(0,0,0)');
+        },
+        blueToCSS: function() {
+            assert(rgba('blue').toCSS()).equals('rgb(0,0,255)');
+        },
+        blueWithAlphaToCSS: function() {
+            assert(hsva('blue').a(0.5).toCSS()).equals('rgba(0,0,255,0.5)')
+        }
+    });
+
+    tests('chaining', {
+        simpleChain: function() {
+            assertArray(rgba().r(1).g(0.7).b(0.5).a(0.3).toArray(), [1, 0.7, 0.5, 0.3]);
+        }
+    });
+
+    tests('bounds', {
+        lowerBound: function() {
+            assert(rgba().r(-5).r()).equals(0);
+        },
+        upperBound: function() {
+            assert(rgba().r(10).r()).equals(1);
+        }
+    });
+
+    // TODO: type conversions (hsva(rgba())
 }());
