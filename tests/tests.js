@@ -15,6 +15,7 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
     };
     var rgba = color.rgba;
     var hsva = color.hsva;
+    var hsla = color.hsla;
 
     runner.tests('Name to hex', nameToHexTests());
 
@@ -62,6 +63,15 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
             }, {h: 0, s: 1, v: 1, a: 1});
         }
     }));
+    runner.tests('HSLA initializers', initializers({
+        ob: hsla,
+        namedParameter: {s: 1, l: 0.5},
+        isRed: function(c) {
+            utils.each(function(k, v) {
+                assert(c[k]()).equals(v);
+            }, {h: 0, s: 1, l: 0.5, a: 1});
+        }
+    }));
 
     var getters = function(ob, channels) {
         var names = utils.map(function(k) {
@@ -83,6 +93,7 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
 
     runner.tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
     runner.tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
+    runner.tests('HSLA getters', getters(hsla, ['h', 's', 'l', 'a']));
 
     var setters = function(ob, channels) {
         var names = utils.map(function(k) {
@@ -103,6 +114,7 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
 
     runner.tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
     runner.tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
+    runner.tests('HSLA setters', setters(hsla, ['h', 's', 'l', 'a']));
 
     runner.tests('toArray', {
         initial: function() {
@@ -161,6 +173,9 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
         },
         rgba_hsva: function() {
             assert(rgba(hsva(rgba('red'))).toArray()).equals([1, 0, 0, 1]);
+        },
+        rgba_hsla: function() {
+            assert(rgba(hsla(rgba('red'))).toArray()).equals([1, 0, 0, 1]);
         },
         alpha: function() {
             assert(hsva(rgba({a: 0.5})).a()).equals(0.5);

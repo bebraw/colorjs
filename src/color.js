@@ -161,6 +161,14 @@ define(['utils'], function(utils) {
         };
     };
 
+    var HEX_HSV = function(hex) {
+        return RGB_HSV(HEX_RGB(hex));
+    };
+
+    var HEX_HSL = function(hex) {
+        return RGB_HSL(HEX_RGB(hex));
+    };
+
     var HSV_RGB = function(hsv) {
         // http://www.colorjack.com/opensource/dhtml+color+picker.html
         // h, s, v e [0, 1]
@@ -223,6 +231,42 @@ define(['utils'], function(utils) {
         };
     };
 
+    var hue_to_rgb = function(p, q, t) {
+        // based on CamanJS
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+
+        return p;
+    }
+
+    var HSL_RGB = function(hsl) {
+        // based on CamanJS
+        var r, g, b;
+        var h = hsl.h;
+        var s = hsl.s;
+        var l = hsl.l;
+  
+        if(s === 0){
+            r = g = b = l; // achromatic
+        } else {
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+
+            r = hue_to_rgb(p, q, h + 1/3);
+            g = hue_to_rgb(p, q, h);
+            b = hue_to_rgb(p, q, h - 1/3);
+        }
+
+        return {
+            r: r,
+            g: g,
+            b: b
+        };
+    };
+
     var RGB_HSV = function(rgb) {
         // based on http://www.phpied.com/rgb-color-parser-in-javascript/
         var r = rgb.r * 255;
@@ -250,8 +294,29 @@ define(['utils'], function(utils) {
         };
     };
 
-    var HEX_HSV = function(hex) {
-        return RGB_HSV(HEX_RGB(hex));
+    var RGB_HSL = function(rgb) {
+        // based on CamanJS
+        var r = rgb.r;
+        var g = rgb.g;
+        var b = rgb.b;
+
+        var max = Math.max(r, g, b), min = Math.min(r, g, b), 
+            h, s, l = (max + min) / 2;
+
+        if(max == min){
+            h = s = 0; // achromatic
+        } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        return {h: h, s: s, l: l};
     };
 
     var RGB_HEX = function(rgb) {
@@ -264,6 +329,10 @@ define(['utils'], function(utils) {
 
     var HSV_HEX = function(hsv) {
         return RGB_HEX(HSV_RGB(hsv));
+    };
+
+    var HSL_HEX = function(hsl) {
+        return RGB_HEX(HSL_RGB(hsl));
     };
 
     var colorTemplate = function(initialChannels, converters) {
@@ -354,10 +423,16 @@ define(['utils'], function(utils) {
         colorToRGB: HSV_RGB,
         colorToHex: HSV_HEX
     });
+    var hsla = colorTemplate({h: 0, s: 0, l: 0, a: 1}, {
+        hexToColor: HEX_HSL,
+        colorToRGB: HSL_RGB,
+        colorToHex: HSL_HEX
+    });
 
     return {
         nameToHex: nameToHex,
         rgba: rgba,
-        hsva: hsva
+        hsva: hsva,
+        hsla: hsla
     };
 });

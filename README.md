@@ -1,7 +1,7 @@
 colorjs
 =======
 
-colorjs provides simple API that may be used to create colors (RGBA, HSVA) and perform various color related operations (conversions and such).
+colorjs provides simple API that may be used to create colors (RGBA, HSVA, HSLA) and perform various color related operations (conversions and such).
 
 Examples
 --------
@@ -16,6 +16,10 @@ color.rgba('FF0000');
 color.hsva('red');
 color.hsva('#FF0000');
 color.hsva('FF0000');
+
+color.hsla('red');
+color.hsla('#FF0000');
+color.hsla('FF0000');
 
 color.rgba({r: 1});
 color.hsva({s: 1, v: 1});
