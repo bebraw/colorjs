@@ -91,10 +91,6 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
         return utils.toObject(utils.zip(names, methods));
     };
 
-    runner.tests('RGBA getters', getters(rgba, ['r', 'g', 'b', 'a']));
-    runner.tests('HSVA getters', getters(hsva, ['h', 's', 'v', 'a']));
-    runner.tests('HSLA getters', getters(hsla, ['h', 's', 'l', 'a']));
-
     var setters = function(ob, channels) {
         var names = utils.map(function(k) {
             return 'set' + k.toUpperCase();
@@ -112,9 +108,16 @@ define(['runner', 'color', 'utils'], function(runner, color, utils) {
         return utils.toObject(utils.zip(names, methods));
     };
 
-    runner.tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
-    runner.tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
-    runner.tests('HSLA setters', setters(hsla, ['h', 's', 'l', 'a']));
+    var spaces = [
+        {name: 'RGBA', ob: rgba, channels: ['r', 'g', 'b', 'a']},
+        {name: 'HSVA', ob: hsva, channels: ['h', 's', 'v', 'a']},
+        {name: 'HSLA', ob: hsla, channels: ['h', 's', 'l', 'a']}
+    ];
+
+    utils.each(function(k) {
+        runner.tests(k.name + ' getters', getters(k.ob, k.channels));
+        runner.tests(k.name + ' setters', setters(k.ob, k.channels));
+    }, spaces);
 
     runner.tests('toArray', {
         initial: function() {
