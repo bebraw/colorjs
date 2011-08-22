@@ -16,14 +16,6 @@
 
     tests('Name to hex', nameToHexTests());
 
-    // XXX: eliminate this. assert().equals should be able to deal with this
-    // case
-    var assertArray = function(given, expected) {
-        each(function(k, i) {
-            assert(given[i]).equals(k);
-        }, expected);        
-    };
-
     var initializers = function(opts) {
         var pairs = {
             colorName: 'red',
@@ -44,7 +36,7 @@
             var c = opts.ob();
             var result = c.toArray();
 
-            assertArray(result, [0, 0, 0, 1]);
+            assert(result).equals([0, 0, 0, 1]);
         };
 
         return ret;
@@ -112,16 +104,16 @@
 
     tests('toArray', {
         initial: function() {
-            assertArray(hsva().toArray(), [0, 0, 0, 1]);
+            assert(hsva().toArray()).equals([0, 0, 0, 1]);
         },
         blue: function() {
-            assertArray(rgba('blue').toArray(), [0, 0, 1, 1]);
+            assert(rgba('blue').toArray()).equals([0, 0, 1, 1]);
         }
     });
 
     tests('toHex', {
         initial: function() {
-            assertArray(hsva().toHex(), '000000');
+            assert(hsva().toHex()).equals('000000');
         },
         redRGBA: function() {
             assert(rgba('red').toHex()).equals('ff0000');
@@ -145,7 +137,7 @@
 
     tests('chaining', {
         simpleChain: function() {
-            assertArray(rgba().r(1).g(0.7).b(0.5).a(0.3).toArray(), [1, 0.7, 0.5, 0.3]);
+            assert(rgba().r(1).g(0.7).b(0.5).a(0.3).toArray()).equals([1, 0.7, 0.5, 0.3]);
         }
     });
 
@@ -157,16 +149,16 @@
             assert(rgba().r(10).r()).equals(1);
         },
         initialBounds: function() {
-            assertArray(rgba({r: -4, g: 10, b: -4, a: 10}).toArray(), [0, 1, 0, 1]);
+            assert(rgba({r: -4, g: 10, b: -4, a: 10}).toArray()).equals([0, 1, 0, 1]);
         }
     });
 
     tests('type conversions', {
         hsva_rgba: function() {
-            assertArray(rgba(hsva('red')).toArray(), [1, 0, 0, 1]);
+            assert(rgba(hsva('red')).toArray()).equals([1, 0, 0, 1]);
         },
         rgba_hsva: function() {
-            assertArray(rgba(hsva(rgba('red'))).toArray(), [1, 0, 0, 1]);
+            assert(rgba(hsva(rgba('red'))).toArray()).equals([1, 0, 0, 1]);
         },
         alpha: function() {
             assert(hsva(rgba({a: 0.5})).a()).equals(0.5);

@@ -21,13 +21,29 @@ var assert = function(stmt) {
         
         return false;
     };
-    
+
+    var isArray = function(o) {
+        return Object.prototype.toString.call(o) === '[object Array]';
+    };
+
     var methods = {
         equals: {
             error: function(val) {
                 return val + ' did not equal ' + stmt + '!'
             },
             method: function(val) {
+                if(isArray(val)) {
+                    var ret = true;
+      
+                    for(var k in val) {
+                        if(val[k] !== stmt[k]) {
+                            return false;
+                        }
+                    }
+      
+                    return true;
+                }
+
                 return val == stmt;
             }
         },
@@ -50,9 +66,7 @@ var assert = function(stmt) {
                     object: function(val) {
                         return to_s.call(val) === '[object Object]';
                     },
-                    array: function(val) {
-                        return to_s.call(val) === '[object Array]';
-                    }
+                    array: isArray
                 };
 
                 return checkArguments(arguments,
