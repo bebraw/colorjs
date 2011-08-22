@@ -171,16 +171,16 @@ define(['utils'], function(utils) {
         var A, B, C, D;
 
         if (S == 0) {
-            R = G = B = Math.round(V * 255);
+            R = G = B = Math.round(V);
         }
         else {
             if (H >= 1) H = 0;
             H = 6 * H;
             D = H - Math.floor(H);
-            A = Math.round(255 * V * (1 - S));
-            B = Math.round(255 * V * (1 - (S * D)));
-            C = Math.round(255 * V * (1 - (S * (1 - D))));
-            V = Math.round(255 * V);
+            A = Math.round(V * (1 - S));
+            B = Math.round(V * (1 - (S * D)));
+            C = Math.round(V * (1 - (S * (1 - D))));
+            V = Math.round(V);
 
             switch (Math.floor(H)) {
                 case 0:
@@ -217,9 +217,9 @@ define(['utils'], function(utils) {
         }
 
         return {
-            r: R / 255,
-            g: G / 255,
-            b: B / 255
+            r: R,
+            g: G,
+            b: B
         };
     };
 
