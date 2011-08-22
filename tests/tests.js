@@ -16,6 +16,12 @@
 
     tests('Name to hex', nameToHexTests());
 
+    var assertArray = function(given, expected) {
+        each(function(k, i) {
+            assert(given[i]).equals(k);
+        }, expected);        
+    };
+
     var initializers = function(opts) {
         var pairs = {
             colorName: 'red',
@@ -36,9 +42,7 @@
             var c = opts.ob();
             var result = c.toArray();
 
-            each(function(k, i) {
-                assert(result[i]).equals(k);
-            }, [0, 0, 0, 1]);
+            assertArray(result, [0, 0, 0, 1]);
         };
 
         return ret;
@@ -106,6 +110,21 @@
 
     tests('RGBA setters', setters(rgba, ['r', 'g', 'b', 'a']));
     tests('HSVA setters', setters(hsva, ['h', 's', 'v', 'a']));
+
+    tests('toArray', {
+        initialToArray: function() {
+            var c = hsva();
+            var result = c.toArray();
+
+            assertArray(result, [0, 0, 0, 1]);
+        },
+        blueToArray: function() {
+            var c = rgba('blue');
+            var result = c.toArray();
+
+            assertArray(result, [0, 0, 1, 1]);
+        }
+    });
 
     // TODO: tests invalid sets (neg, too high, wrong type)
     // TODO: test chaining
