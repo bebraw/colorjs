@@ -95,3 +95,9 @@ Other libraries
 ---------------
 
 See https://github.com/bebraw/jswiki/wiki/Color-libraries .
+
+License
+-------
+
+colorjs is available under MIT license. See LICENSE for more details.
+
