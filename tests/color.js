@@ -1,5 +1,5 @@
-define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
-    var assert = bunit.assert;
+define(['bunit', '../src/color', 'utils', 'assert'],
+function(bunit, color, utils, assert) {
     var rgba = color.rgba;
     var hsva = color.hsva;
     var hsla = color.hsla;
