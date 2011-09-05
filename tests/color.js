@@ -1,5 +1,4 @@
 define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
-    var suite = bunit.suite;
     var assert = bunit.assert;
     var rgba = color.rgba;
     var hsva = color.hsva;
@@ -20,7 +19,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         }, pairs);
     };
 
-    suite('Name to hex', nameToHexTests());
+    bunit('Name to hex', nameToHexTests());
 
     var initializers = function(opts) {
         var pairs = {
@@ -48,7 +47,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         return ret;
     };
 
-    suite('RGBA initializers', initializers({
+    bunit('RGBA initializers', initializers({
         ob: rgba,
         namedParameter: {r: 1},
         isRed: function(c) {
@@ -57,7 +56,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
             }, {r: 1, g: 0, b: 0, a: 1});
         }
     }));
-    suite('HSVA initializers', initializers({
+    bunit('HSVA initializers', initializers({
         ob: hsva,
         namedParameter: {s: 1, v: 1},
         isRed: function(c) {
@@ -66,7 +65,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
             }, {h: 0, s: 1, v: 1, a: 1});
         }
     }));
-    suite('HSLA initializers', initializers({
+    bunit('HSLA initializers', initializers({
         ob: hsla,
         namedParameter: {s: 1, l: 0.5},
         isRed: function(c) {
@@ -118,11 +117,11 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
     ];
 
     utils.each(function(k) {
-        suite(k.name + ' getters', getters(k.ob, k.channels));
-        suite(k.name + ' setters', setters(k.ob, k.channels));
+        bunit(k.name + ' getters', getters(k.ob, k.channels));
+        bunit(k.name + ' setters', setters(k.ob, k.channels));
     }, spaces);
 
-    suite('toArray', {
+    bunit('toArray', {
         initial: function() {
             assert(hsva().toArray()).equals([0, 0, 0, 1]);
         },
@@ -131,7 +130,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         }
     });
 
-    suite('toHex', {
+    bunit('toHex', {
         initial: function() {
             assert(hsva().toHex()).equals('000000');
         },
@@ -143,7 +142,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         }
     });
 
-    suite('toCSS', {
+    bunit('toCSS', {
         initial: function() {
             assert(hsva().toCSS()).equals('rgb(0,0,0)');
         },
@@ -155,13 +154,13 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         }
     });
 
-    suite('chaining', {
+    bunit('chaining', {
         simpleChain: function() {
             assert(rgba().r(1).g(0.7).b(0.5).a(0.3).toArray()).equals([1, 0.7, 0.5, 0.3]);
         }
     });
 
-    suite('bounds', {
+    bunit('bounds', {
         lowerBound: function() {
             assert(rgba().r(-5).r()).equals(0);
         },
@@ -173,7 +172,7 @@ define(['bunit', '../src/color', 'utils'], function(bunit, color, utils) {
         }
     });
 
-    suite('type conversions', {
+    bunit('type conversions', {
         hsva_rgba: function() {
             assert(rgba(hsva('red')).toArray()).equals([1, 0, 0, 1]);
         },

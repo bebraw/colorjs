@@ -8,7 +8,10 @@ require(
     ['bunit', 'tests/tests'],
     function(bunit, tests) {
         require.ready(function() {
-            bunit.defaultUI(tests);
+            var r = bunit.runner();
+
+            r.defaultUI();
+            r.run();
         });
     }
 );
