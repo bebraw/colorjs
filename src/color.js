@@ -1,4 +1,13 @@
-define(['utils'], function(utils) {
+(function(root, factory) {
+    if(typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['utils'], factory);
+    }
+    else {
+        // Browser globals
+        root.color = factory(root.utils);
+    }
+}(this, function(utils) {
     var nameToHex = function(name) {
         // based on http://www.phpied.com/rgb-color-parser-in-javascript/
         var colors = {
@@ -176,9 +185,9 @@ define(['utils'], function(utils) {
             S = hsv.s,
             V = hsv.v,
             R, G, B;
-        var A, B, C, D;
+        var A, C, D;
 
-        if (S == 0) {
+        if (S === 0) {
             R = G = B = Math.round(V);
         }
         else {
@@ -240,7 +249,7 @@ define(['utils'], function(utils) {
         if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
 
         return p;
-    }
+    };
 
     var HSL_RGB = function(hsl) {
         // based on CamanJS
@@ -276,7 +285,7 @@ define(['utils'], function(utils) {
         var v = Math.max(Math.max(r, g), b);
         var m = v - n;
 
-        if(m == 0) {
+        if(m === 0) {
             return {
                 h: null,
                 s: 0,
@@ -389,9 +398,9 @@ define(['utils'], function(utils) {
                 },
                 toCSS: function() {
                     var rgb = converters.colorToRGB(channels);
-                    var r = parseInt(rgb.r * 255);
-                    var g = parseInt(rgb.g * 255);
-                    var b = parseInt(rgb.b * 255);
+                    var r = parseInt(rgb.r * 255, 10);
+                    var g = parseInt(rgb.g * 255, 10);
+                    var b = parseInt(rgb.b * 255, 10);
                     var a = channels.a;
 
                     if(channels.a < 1) {
@@ -435,4 +444,4 @@ define(['utils'], function(utils) {
         hsva: hsva,
         hsla: hsla
     };
-});
+}));
