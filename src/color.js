@@ -181,63 +181,37 @@
     var HSV_RGB = function(hsv) {
         // http://www.colorjack.com/opensource/dhtml+color+picker.html
         // h, s, v e [0, 1]
-        var H = hsv.h,
-            S = hsv.s,
-            V = hsv.v,
-            R, G, B;
-        var A, C, D;
+        var R, B, G, S = hsv.s, V = hsv.v, H = hsv.h;
 
-        if (S === 0) {
-            R = G = B = Math.round(V);
-        }
-        else {
-            if (H >= 1) H = 0;
-            H = 6 * H;
-            D = H - Math.floor(H);
-            A = Math.round(V * (1 - S));
-            B = Math.round(V * (1 - (S * D)));
-            C = Math.round(V * (1 - (S * (1 - D))));
-            V = Math.round(V);
+        if(S > 0) {
+            if(H >= 1) H=0;
 
-            switch (Math.floor(H)) {
-                case 0:
-                    R = V;
-                    G = C;
-                    B = A;
-                    break;
-                case 1:
-                    R = B;
-                    G = V;
-                    B = A;
-                    break;
-                case 2:
-                    R = A;
-                    G = V;
-                    B = C;
-                    break;
-                case 3:
-                    R = A;
-                    G = B;
-                    B = V;
-                    break;
-                case 4:
-                    R = C;
-                    G = A;
-                    B = V;
-                    break;
-                case 5:
-                    R = V;
-                    G = A;
-                    B = B;
-                    break;
+            H = 6 * H; F = H - Math.floor(H);
+            A = V * (1.0 - S);
+            B = V * (1.0 - (S * F));
+            C = V * (1.0 - (S * (1.0 - F)));
+
+            switch(Math.floor(H)) {
+                case 0: R = V; G = C; B = A; break;
+                case 1: R = B; G = V; B = A; break;
+                case 2: R = A; G = V; B = C; break;
+                case 3: R = A; G = B; B = V; break;
+                case 4: R = C; G = A; B = V; break;
+                case 5: R = V; G = A; B = B; break;
             }
-        }
 
-        return {
-            r: R,
-            g: G,
-            b: B
-        };
+            return({
+                r: R? R: 0,
+                g: G? G: 0,
+                b: B? B: 0
+            });
+        }
+        
+        return({
+            r: (V=Math.round(V)),
+            g: V,
+            b: V
+        });
     };
 
     var hue_to_rgb = function(p, q, t) {

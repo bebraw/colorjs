@@ -144,13 +144,13 @@ function(bunit, color, utils, assert) {
 
     bunit('toCSS', {
         initial: function() {
-            assert(hsva().toCSS()).equals('rgb(0,0,0)');
+            assert(hsva({h: 0.5, s: 0.5, v: 1.0}).toCSS()).equals('rgb(127,255,255)');
         },
         blue: function() {
             assert(rgba('blue').toCSS()).equals('rgb(0,0,255)');
         },
         blueWithAlpha: function() {
-            assert(hsva('blue').a(0.5).toCSS()).equals('rgba(0,0,255,0.5)')
+            assert(hsva('blue').a(0.5).toCSS()).equals('rgba(0,0,255,0.5)');
         }
     });
 
