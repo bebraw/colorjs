@@ -208,7 +208,7 @@
         }
         
         return({
-            r: (V=Math.round(V)),
+            r: V,
             g: V,
             b: V
         });
