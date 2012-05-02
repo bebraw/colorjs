@@ -383,6 +383,12 @@
 
                     return 'rgb(' + r + ',' + g + ',' + b + ')';
                 },
+                toRGBA: function() { // XXX: experimental
+                    var rgba = converters.colorToRGB(channels);
+                    rgba.a = channels.a;
+
+                    return rgba;
+                },
                 toHex: function() {
                     return converters.colorToHex(channels);
                 }
