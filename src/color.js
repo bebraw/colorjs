@@ -303,11 +303,10 @@
     };
 
     var RGB_HEX = function(rgb) {
-        // http://blogs.x2line.com/al/articles/280.aspx
         // r, g, b e [0, 1]
-        var decColor = rgb.b * 255 + 256 * rgb.g * 255 + 65536 * rgb.r * 255;
+        function toHex(n) {return utils.leftFill(Math.round(n * 255).toString(16), 2, 0);}
 
-        return utils.leftFill(decColor.toString(16), 6, 0);
+        return toHex(rgb.r) + toHex(rgb.g) + toHex(rgb.b);
     };
 
     var HSV_HEX = function(hsv) {
