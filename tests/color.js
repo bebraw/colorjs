@@ -142,6 +142,12 @@ function(bunit, color, utils, assert) {
         }
     });
 
+    bunit('hex to hsva', {
+        gray: function() {
+            assert(hsva('7f7f7f').toArray()[2]).between(0.49, 0.51);
+        }
+    });
+
     bunit('toCSS', {
         initial: function() {
             assert(hsva({h: 0.5, s: 0.5, v: 1.0}).toCSS()).equals('rgb(127,255,255)');

@@ -251,29 +251,31 @@
     };
 
     var RGB_HSV = function(rgb) {
-        // based on http://www.phpied.com/rgb-color-parser-in-javascript/
-        var r = rgb.r * 255;
-        var g = rgb.g * 255;
-        var b = rgb.b * 255;
-        var n = Math.min(Math.min(r, g), b);
-        var v = Math.max(Math.max(r, g), b);
-        var m = v - n;
+        // http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+        var r = rgb.r;
+        var g = rgb.g;
+        var b = rgb.b;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
 
-        if(m === 0) {
-            return {
-                h: null,
-                s: 0,
-                v: v 
-            };
+        var d = max - min;
+        s = max === 0 ? 0 : d / max;
+
+        if(max == min){
+            h = 0; // achromatic
+        } else{
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
         }
-
-        var h = r==n ? 3 + (b - g) / m : (g == n ? 5 + (r - b) / m : 1 + (g - r) / m);
-        h = (h == 6? 0: h) / 6;
 
         return {
             h: h,
-            s: m / v,
-            v: v / 255
+            s: s,
+            v: v
         };
     };
 
