@@ -1,5 +1,11 @@
 (function(root, factory) {
-    if(typeof define === 'function' && define.amd) {
+    if(typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require('utils'));
+    }
+    else if(typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['utils'], factory);
     }

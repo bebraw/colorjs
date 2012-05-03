@@ -2,7 +2,7 @@ require(
     {
         paths: {
             bunit: 'lib/bunit',
-            utils: 'lib/utils',
+            utils: 'src/utils',
             assert: 'lib/assert'
         }
     },
