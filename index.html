@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Colorjs by bebraw</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Colorjs</h1>
+        <p>Color lib for JS (supports rgba, hsva, hsla via a simple API) (MIT)</p>
+        <p class="view"><a href="https://github.com/bebraw/colorjs">View the Project on GitHub <small>bebraw/colorjs</small></a></p>
+        <ul>
+          <li><a href="https://github.com/bebraw/colorjs/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bebraw/colorjs/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bebraw/colorjs">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>colorjs</h1>
+
+<p>colorjs provides simple API that may be used to create colors (RGBA, HSVA, HSLA) and perform various color related operations (conversions and such).</p>
+
+<h2>Examples</h2>
+
+<h3>Making red (#FF0000)</h3>
+
+<div class="highlight">
+<pre><span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'#FF0000'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'FF0000'</span><span class="p">);</span>
+
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">(</span><span class="s1">'#FF0000'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">(</span><span class="s1">'FF0000'</span><span class="p">);</span>
+
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsla</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsla</span><span class="p">(</span><span class="s1">'#FF0000'</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsla</span><span class="p">(</span><span class="s1">'FF0000'</span><span class="p">);</span>
+
+<span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">({</span><span class="nx">r</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">({</span><span class="nx">s</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">v</span><span class="o">:</span> <span class="mi">1</span><span class="p">});</span>
+
+<span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">().</span><span class="nx">r</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">().</span><span class="nx">s</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">v</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<h3>Getter/setter notation</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">r</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">r</span><span class="p">();</span> <span class="c1">// should return 0.5</span>
+</pre>
+</div>
+
+
+<h3>toArray</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">toArray</span><span class="p">();</span> <span class="c1">// [1, 0, 0, 1]</span>
+</pre>
+</div>
+
+
+<h3>toHex</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">toHex</span><span class="p">();</span> <span class="c1">// 'ff0000'</span>
+</pre>
+</div>
+
+
+<h3>toCSS</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">toCSS</span><span class="p">();</span> <span class="c1">// 'rgb(255,0,0)'</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">a</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">toCSS</span><span class="p">();</span> <span class="c1">// 'rgba(255,0,0,0.5)'</span>
+</pre>
+</div>
+
+
+<h3>Chaining</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">r</span><span class="p">(</span><span class="mf">0.5</span><span class="p">).</span><span class="nx">b</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span> <span class="c1">// chains</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">toArray</span><span class="p">();</span> <span class="c1">// [0.5, 0.5, 0, 1]</span>
+</pre>
+</div>
+
+
+<h3>Bounds</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">({</span><span class="nx">h</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">s</span><span class="o">:</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="nx">v</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">a</span><span class="o">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">});</span>
+
+<span class="nx">c</span><span class="p">.</span><span class="nx">toArray</span><span class="p">();</span> <span class="c1">// [1, 0, 1, 0]</span>
+</pre>
+</div>
+
+
+<h3>Type conversions</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">c1</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">rgba</span><span class="p">(</span><span class="s1">'red'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">c2</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">hsva</span><span class="p">(</span><span class="nx">c1</span><span class="p">);</span>
+
+<span class="nx">c2</span><span class="p">.</span><span class="nx">toArray</span><span class="p">();</span> <span class="c1">// [0, 1, 1, 1]</span>
+</pre>
+</div>
+
+
+<h2>Other libraries</h2>
+
+<p>See <a href="https://github.com/bebraw/jswiki/wiki/Color-libraries">https://github.com/bebraw/jswiki/wiki/Color-libraries</a> .</p>
+
+<h2>License</h2>
+
+<p>colorjs is available under MIT license. See LICENSE for more details.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/bebraw">bebraw</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
