@@ -1,4 +1,4 @@
-define(['bunit', '../src/color', 'utils', 'assert'],
+define(['bunit', '../src/color', 'colorutils', 'assert'],
 function(bunit, color, utils, assert) {
     var rgba = color.rgba;
     var hsva = color.hsva;

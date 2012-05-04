@@ -6,7 +6,7 @@
         define(factory);
     }
     else {
-        root.utils = factory();
+        root.colorutils = factory();
     }
 }(this, function() {
     var context = function(i, func) {
