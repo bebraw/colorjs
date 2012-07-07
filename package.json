@@ -2,7 +2,7 @@
     "name": "colorjs",
     "description": "Color lib. Supports rgba, hsva, hsla and conversions via a simple API.",
     "author": "Juho Vepsalainen <bebraw@gmail.com>",
-    "version": "0.1.7",
+    "version": "0.1.8",
 
     "main": "./lib/color.js",
 
