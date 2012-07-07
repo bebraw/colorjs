@@ -363,13 +363,11 @@
 
             var channel = function(name) {
                 return function(v) {
-                    if(v) {
-                        channels[name] = utils.clamp(v, 0, 1);
+                    if(!utils.isDefined(v)) return channels[name];
 
-                        return methods;
-                    }
+                    channels[name] = utils.clamp(v, 0, 1);
 
-                    return channels[name];
+                    return methods;
                 };
             };
 

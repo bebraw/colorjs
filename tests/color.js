@@ -102,8 +102,16 @@ function(bunit, color, utils, assert) {
                 var c = ob();
 
                 c[k](0.5);
-
                 assert(c[k]()).equals(0.5);
+
+                c[k](0);
+                assert(c[k]()).equals(0);
+
+                c[k](-100);
+                assert(c[k]()).equals(0);
+
+                c[k](100);
+                assert(c[k]()).equals(1);
             };
         }, channels);
 

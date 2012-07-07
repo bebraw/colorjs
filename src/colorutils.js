@@ -25,6 +25,10 @@
         return typeof(o) === 'string';
     };
 
+    var isDefined = function(input) {
+        return typeof input !== "undefined";
+    };
+
     var lstrip = function(s, c) {
         var ret = '';
         var seeking = true;
@@ -156,7 +160,7 @@
             ret.push(k);
         }, o);
 
-        return ret;    
+        return ret;
     };
 
     var values = function(o) {
@@ -190,6 +194,7 @@
         isArray: isArray,
         isObject: isObject,
         isString: isString,
+        isDefined: isDefined,
         lstrip: lstrip,
         each: each,
         map: map,
